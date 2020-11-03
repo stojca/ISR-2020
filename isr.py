@@ -1,6 +1,7 @@
 import sys
 import os
 import math
+from collections import Counter
 
 input_file = sys.argv
 
@@ -24,13 +25,17 @@ def max_word_in_document(word):
     return cnt
 
 
+def max_word_in_document_real(word, document):
+    cnt = Counter(document)
+
+    return max(cnt.values())
+
 
 def count_word_all_doc(word):
     cnt = 0
     for arr in [d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]:
         cnt += count_freq(arr, word)
 
-    print("Word " + ">>"+ word +"<<" + " in all documents " + str(cnt))
     return cnt
 
 
@@ -39,7 +44,7 @@ def count_word_in_doc(word):
     for doc in [d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]:
         if word in doc:
             words_in_doc += 1
-    print("Word " + ">>"+ word+ "<<" + "repeated in " + str(words_in_doc) + " documents")
+    #print("Word " + ">>"+ word+ "<<" + "repeated in " + str(words_in_doc) + " documents")
     return words_in_doc
 
 
@@ -64,7 +69,7 @@ def unique_words():
     unique_list = list(set(d1_sorted + d2_sorted + d3_sorted + d4_sorted + d5_sorted))
 
     print(sorted(unique_list))
-    print(len(unique_list))
+    print("Length " + str(len(unique_list)))
     # check number of unique words
 
 
@@ -84,32 +89,23 @@ d3_sorted = sorted(d3.split(" "))
 d4_sorted = sorted(d4.split(" "))
 d5_sorted = sorted(d5.split(" "))
 
-# a
-print(d1_sorted)
-print(d2_sorted)
-print(d3_sorted)
-print(d4_sorted)
-print(d5_sorted)
+print("Sorted words")
+
+print(unique_words())
+
+print("------------------")
 
 # b Fi
+print("b) for information")
 print(count_freq(d1_sorted, "information"))
-print(count_freq(d3_sorted, "data"))
-print(count_freq(d5_sorted, "search"))
-
-
-count_word_all_doc("information")
-count_word_all_doc("hypertext")
-
-
+print(count_word_all_doc("information"))
 count_word_in_doc("information")
+print("b) for hypertext")
+print(count_freq(d1_sorted, "hypertext"))
+print(count_word_all_doc("hypertext"))
 count_word_in_doc("hypertext")
 
-
-print("information" in d1_sorted)
-print("information" in d2_sorted)
-print("information" in d3_sorted)
-print("information" in d4_sorted)
-print("information" in d5_sorted)
+print("------------------")
 
 N = count_word_all_doc("information")
 N_hypertext = count_word_all_doc("hypertext")
@@ -138,15 +134,76 @@ for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted])
 for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
     print(str(i) + " document --> raw tf: " + str(raw_tf("information",  doc)))
 
-#d.3
-for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
-    normalization = float(float(raw_tf("information",  doc)) / float(max_word_in_document("information") ))
-    print(str(i) + " document --> normalization tf: " + str(normalization))
+#d.1
+normalization = float(float(raw_tf("information",  d1_sorted)) / float(max_word_in_document_real("information", d1_sorted)))
+print("1 document --> normalization tf: " + str(normalization))
+
+#d.2
+normalization = float(float(raw_tf("information",  d2_sorted)) / float(max_word_in_document_real("information", d2_sorted)))
+print("2 document --> normalization tf: " + str(normalization))
+
+#d.5
+normalization = float(float(raw_tf("information",  d5_sorted)) / float(max_word_in_document_real("information", d5_sorted)))
+print("5 document --> normalization tf: " + str(normalization))
 
 #d.4
+normalization = float(float(raw_tf("information",  d5_sorted)) / float(max_word_in_document_real("information", d5_sorted)))
+print("5 document --> normalization tf: " + str(normalization))
+
+#d.1
+normalization = math.log(raw_tf('information', d2_sorted), 2) + 1
+print("1 document --> log normalization tf: " + str(normalization))
+
+
+def e1(word, doc, N=5.0):
+    raw = raw_tf(word, doc)
+    ni = float(count_word_in_doc(word))
+    lg = math.log(N/ni,2)
+
+    return raw * lg
+
+print("-----------------------")
+print("Weights according to e1")
+
 for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
-    print(str(i) + " document --> log normalization tf: " + str(math.log(1 + raw_tf("information",  doc), 2)))
+    weight = e1('information', doc)
+    print("doc %s ----> %f" % (i+1, weight))
 
 
+def e2(word, doc, N=5):
+    raw = raw_tf(word, doc)
+    ni = float(count_word_in_doc(word))
+    lg = math.log(N/ni,2)
 
-unique_words()
+    maxf = float(max_word_in_document_real(word, doc))
+
+    if raw == 0:
+        return 0
+    return (raw/maxf) * lg
+
+print("-----------------------")
+print("Weights according to e2")
+
+l = [d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]
+for i, doc in enumerate(l):
+    weight = e2('information', doc)
+    print("doc %s ----> %f" % (i+1, weight))
+
+print("------------------------------")
+print("Weights according to e3")
+
+def e3(word, doc, N=5):
+    raw = raw_tf(word, doc)
+    ni = float(count_word_in_doc(word))
+    lg = math.log(N/ni,2)
+
+    if raw == 0:
+        return 0
+    return (math.log(raw,2) + 1) * lg
+
+
+for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    weight = e3('information', doc)
+    print("doc %s ----> %f" % (i+1, weight))
+
+
