@@ -14,6 +14,17 @@ def count_freq(words_list, word):
     return counter
 
 
+def max_word_in_document(word):
+    cnt = 0
+    for arr in [d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]:
+        if cnt < count_freq(arr, word):
+            cnt = count_freq(arr, word)
+
+    print("Max Word " + ">>"+ word +"<<" + " in documents " + str(cnt))
+    return cnt
+
+
+
 def count_word_all_doc(word):
     cnt = 0
     for arr in [d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]:
@@ -87,6 +98,8 @@ print("hypertext inverse frequency " + str(id_fi_hypertext))
 print("information inverse frequency smooth " + str(math.log(1 + 5/n_i, 2)))
 print("hypertext inverse frequency smooth " + str(math.log(1 + 5/n_i_hypertext, 2)))
 
-print("information inverse frequency max " + str(math.log(1 + n_i/n_i, 2)))
-print("hypertext inverse frequency max " + str(math.log(1 + n_i/n_i_hypertext, 2)))
+max_word_information = max_word_in_document("information")
+max_word_hypertext = max_word_in_document("hypertext")
+print("information inverse frequency max " + str(math.log(1 + max_word_information/n_i, 2)))
+print("hypertext inverse frequency max " + str(math.log(1 + max_word_hypertext/n_i_hypertext, 2)))
 
