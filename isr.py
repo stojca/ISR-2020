@@ -20,7 +20,7 @@ def max_word_in_document(word):
         if cnt < count_freq(arr, word):
             cnt = count_freq(arr, word)
 
-    print("Max Word " + ">>"+ word +"<<" + " in documents " + str(cnt))
+    #print("Max Word occuerence " + ">>"+ word +"<<" + " in all documents " + str(cnt))
     return cnt
 
 
@@ -41,6 +41,32 @@ def count_word_in_doc(word):
             words_in_doc += 1
     print("Word " + ">>"+ word+ "<<" + "repeated in " + str(words_in_doc) + " documents")
     return words_in_doc
+
+
+def binary_tf(word, document):
+    for doc_it in document:
+        if word in doc_it:
+            return 1
+
+    return 0
+
+def raw_tf(word, document):
+    count_occurence = 0
+    for doc_it in document:
+        if word in doc_it:
+            count_occurence += 1
+
+    return count_occurence
+
+def unique_words():
+    #unique_words = set()
+
+    unique_list = list(set(d1_sorted + d2_sorted + d3_sorted + d4_sorted + d5_sorted))
+
+    print(sorted(unique_list))
+    print(len(unique_list))
+    # check number of unique words
+
 
 d1 = "information retrieval introduction information retrieval model searching browsing search brows"
 
@@ -90,16 +116,37 @@ N_hypertext = count_word_all_doc("hypertext")
 n_i = count_word_in_doc("information")
 n_i_hypertext = count_word_in_doc("hypertext")
 
-id_fi = math.log(5/n_i, 2)
-id_fi_hypertext = math.log(5/n_i_hypertext, 2)
+id_fi = math.log(5.0/n_i, 2)
+id_fi_hypertext = math.log(5.0/n_i_hypertext, 2)
 print("information inverse frequency " + str(id_fi))
 print("hypertext inverse frequency " + str(id_fi_hypertext))
 
-print("information inverse frequency smooth " + str(math.log(1 + 5/n_i, 2)))
-print("hypertext inverse frequency smooth " + str(math.log(1 + 5/n_i_hypertext, 2)))
+print("information inverse frequency smooth " + str(math.log(1 + 5.0/n_i, 2)))
+print("hypertext inverse frequency smooth " + str(math.log(1 + 5.0/n_i_hypertext, 2)))
 
 max_word_information = max_word_in_document("information")
 max_word_hypertext = max_word_in_document("hypertext")
 print("information inverse frequency max " + str(math.log(1 + max_word_information/n_i, 2)))
 print("hypertext inverse frequency max " + str(math.log(1 + max_word_hypertext/n_i_hypertext, 2)))
 
+
+#d.1
+for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    print(str(i) + " document --> binary tf: " + str(binary_tf("information",  doc)))
+
+#d.2
+for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    print(str(i) + " document --> raw tf: " + str(raw_tf("information",  doc)))
+
+#d.3
+for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    normalization = float(float(raw_tf("information",  doc)) / float(max_word_in_document("information") ))
+    print(str(i) + " document --> normalization tf: " + str(normalization))
+
+#d.4
+for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    print(str(i) + " document --> log normalization tf: " + str(math.log(1 + raw_tf("information",  doc), 2)))
+
+
+
+unique_words()
