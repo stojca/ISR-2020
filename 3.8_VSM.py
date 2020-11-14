@@ -93,9 +93,9 @@ for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted])
         weight = e2(word, doc)
 
         #sum_of_weights += weight
-        quadratic_sum += weight
+        quadratic_sum += weight*weight
         #print("doc %s, word %s ----> %f" % (i+1,word ,weight))
-    print('Quadratic sum of weights for a2 -> %f',quadratic_sum*quadratic_sum)
+    print('Quadratic sum of weights for a2 -> %f',quadratic_sum)
 ########################################################### b1
 ########################sum(wi,j) / sqrt(sum(wi,j*wi,j))
 
