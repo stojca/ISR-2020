@@ -72,6 +72,7 @@ def calc_standard_recall(prec, rec):
     plt.plot(norm_rec, marker='o')
     plt.show()
     print("standard recall lvl of 40%  (list 10) = ", norm_rec[4])
+    return norm_rec
 
 print("Test Query 1--------------------------------------------------------------------------------------------------")
 relevant_documents_q1 = ["d7", "d23", "d55", "d123", "d888", "d1966", "d4711", "d19999"]
@@ -81,7 +82,7 @@ rec_1, prec_1 = getRecPrec(relevant_documents_q1, values_q1, debug=True)
 plt.plot(rec_1, prec_1, marker='o')
 plt.show()
 
-calc_standard_recall(prec_1, rec_1)
+norm_rec_1 = calc_standard_recall(prec_1, rec_1)
 
 
 print("Test Query 2--------------------------------------------------------------------------------------------------")
@@ -92,4 +93,7 @@ rec_2, prec_2 = getRecPrec(relevant_documents_q2, values_q2, debug=True)
 plt.plot(rec_2, prec_2, marker='o')
 plt.show()
 
-calc_standard_recall(prec_2, rec_2)
+norm_rec_2 = calc_standard_recall(prec_2, rec_2)
+
+avg_prec_recall_40 = (norm_rec_1[4] + norm_rec_2[4]) / 2
+print("average precision at 40% = ", avg_prec_recall_40)
