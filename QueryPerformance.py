@@ -57,9 +57,9 @@ def calc_standard_recall(prec, rec):
     # use rec values as index, store precision values
     norm_rec = np.zeros(101)
 
-    for i in range(0, 10):
+    for i in range(0, len(rec)):
       if i < len(prec):
-          print(math.floor(prec[i]))
+          print(math.floor(rec[i]))
           norm_rec[math.floor(rec[i])] = prec[i]
     plt.plot(norm_rec, marker='o')
     plt.show()
