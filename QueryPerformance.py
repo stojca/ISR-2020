@@ -74,6 +74,9 @@ def calc_standard_recall(prec, rec):
     print("standard recall lvl of 40%  (list 10) = ", norm_rec[4])
     return norm_rec
 
+
+print("2.10. CALCULATION: Frequency\n")
+
 print("Test Query 1--------------------------------------------------------------------------------------------------")
 relevant_documents_q1 = ["d7", "d23", "d55", "d123", "d888", "d1966", "d4711", "d19999"]
 
