@@ -12,6 +12,7 @@ d4 = "search service hypertext data retrieval model information need"
 
 d5 = "search service search engine meta search catalogue search service portal"
 
+
 d1_sorted = sorted(d1.split(" "))
 d2_sorted = sorted(d2.split(" "))
 d3_sorted = sorted(d3.split(" "))
@@ -153,4 +154,73 @@ print("--------------------------------------------------\n")
 
 print("--------------------isr6.11----------------------------\n")
 print("--------------------a)----------------------------\n")
+
+def mi(word, document, C, words):
+
+  document = set(document)
+  row_idx = words.index(word)
+
+
+  res = 1
+  for word in document:
+    col = words.index(word)
+    #print("result: ")
+    #print(1 - C[row_idx, col])
+    res *= 1 - C[row_idx,col]
+
+
+  res = 1 - res
+
+  return res
+
+for i, document in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    mi_information = mi("information", document, temp_matrix, unique_words)
+    mi_data = mi("data", document, temp_matrix, unique_words)
+    print("documnet " + str(i))
+    print("information: ")
+    print(mi_information)
+    print("data: ")
+    print(mi_data)
+
+
+
+
+print("What is the degree of membership µi,j for the term ka in document d5? Use a floating-point value.")
+
+res_1 = mi("information", d5_sorted, temp_matrix, unique_words)
+print(res_1)
+
+
+print("What is the degree of membership µi,j for the term kb in document d5? Use a floating-point value.")
+
+res_1 = mi("data", d5_sorted, temp_matrix, unique_words)
+print(res_1)
+
+
+print("--------------------b)----------------------------\n")
+
+
+print(" List the binary matching for “ka AND kb”. State all your 5 results, starting with d1 and ending with d5. “0” represents no match, “1” indicates a match. Write the values separated with commas, omitting any whitespaces. Example: 0,1,0,1,0")
+for i, document in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    mi_information = mi("information", document, temp_matrix, unique_words)
+    mi_data = mi("data", document, temp_matrix, unique_words)
+    mi_res = int(mi_information * mi_data)
+    print(mi_res)
+#
+
+print(" List the binary matching for “ka OR kb”. State all your 5 results, starting with d1 and ending with d5. “0” represents no match, “1” indicates a match. Write the values separated with commas, omitting any whitespaces. Example: 0,1,0,1,0")
+for i, document in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
+    mi_information = mi("information", document, temp_matrix, unique_words)
+    mi_data = mi("data", document, temp_matrix, unique_words)
+    mi_res = int(mi_information) or int(mi_data)
+    print(mi_res)
+
+print("What is the degree of membership for the intersection of µa,j and µb,j for document d5? Use a floating-point value.")
+print(mi("information", d5_sorted, temp_matrix, unique_words) * mi("data", d5_sorted, temp_matrix, unique_words))
+
+print("What is the degree of membership for the union of µa,j and µb,j for document d5? Use a floating-point value.")
+
+
+
+
 
