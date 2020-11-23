@@ -1,8 +1,5 @@
-import sys
-import os
-import math
 import numpy as np
-from collections import Counter
+
 
 
 d1 = "information retrieval introduction information retrieval model searching browsing search brows"
@@ -38,11 +35,11 @@ def unique_words():
 def raw_tf(word, document):
     count_occurence = 0
     for doc_it in document:
-        if word in doc_it:
+        if word == doc_it:
             count_occurence += 1
 
     return count_occurence
-
+print("-------------------------1-----------------------")
 print("-------------------------a---------------------\n")
 #d.2
 for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
@@ -59,13 +56,18 @@ m_matrix = np.zeros((number_of_unique_words, 5))
 for i, doc in enumerate([d1_sorted, d2_sorted, d3_sorted, d4_sorted, d5_sorted]):
     for j in range(0, number_of_unique_words):
         word = unique_words[j]
+        #print("word: " + word)
+        #print("document: " + str(i))
+
         m_matrix[j, i] = raw_tf(word, doc)
+        #print("count: " + str(raw_tf(word, doc)))
 
-print("matrix: ")
-print(m_matrix)
+#print("matrix: ")
+#print(m_matrix)
+#print(m_matrix.shape)
 
-print("transposed matrix mT: ")
-print(np.transpose(m_matrix))
+#print("transposed matrix mT: ")
+#print(np.transpose(m_matrix))
 print("--------------------------------------------------\n")
 
 
@@ -75,11 +77,80 @@ print("-------------------------c---------------------\n")
 
 print("matrix Cl: ")
 matrix_cl = np.dot(m_matrix, np.transpose(m_matrix))
-print(matrix_cl)
-
-print(matrix_cl[20, 9])
-print(matrix_cl[19, 20])
-print(matrix_cl[14, 22])
-
+#print(matrix_cl)
+#print(matrix_cl.shape)
+print(matrix_cl[19, 8])
+print(matrix_cl[18, 19])
+print(matrix_cl[13, 21])
 
 print("--------------------------------------------------\n")
+print("-----------------------e-------------------------\n")
+
+
+#[3,8]
+data_index = unique_words.index('data')
+information_index = unique_words.index('information')
+
+#data
+row_data = matrix_cl[data_index].argsort()
+#print("matrix_cl at data index ")
+#print(matrix_cl[data_index])
+#print(row_data[-1])
+#print(row_data[-2])
+
+print("What are the 2 most frequent terms co-occurring with the search term “data”")
+print(unique_words[row_data[-1]])
+print(unique_words[row_data[-2]])
+
+
+#information
+#print("index " + str(information_index))
+row_information = matrix_cl[information_index].argsort()
+#print("matrix_cl at information index ")
+#print(matrix_cl[information_index])
+#print(row_information[-2])
+#print(row_information[-3])
+
+print("What are the 2 most frequent terms co-occurring with the search term “information”")
+#ignore information as same as search term
+print(unique_words[row_information[-2]])
+print(unique_words[row_information[-3]])
+
+print("--------------------------------------------------\n")
+
+print("-----------------------2b-------------------------\n")
+
+hyper_index = unique_words.index('hypertext')
+similarity = np.dot(matrix_cl[hyper_index],matrix_cl[data_index]) /  (np.linalg.norm(matrix_cl[hyper_index]) * np.linalg.norm(matrix_cl[data_index]))
+print("Scalar Clusters: What is the cosine similarity value for the co-occurring terms “data” and “hypertext”? ")
+print(similarity)
+
+similarity_2 = np.dot(matrix_cl[hyper_index],matrix_cl[information_index]) /  (np.linalg.norm(matrix_cl[hyper_index]) * np.linalg.norm(matrix_cl[information_index]))
+print("Scalar Clusters: What is the cosine similarity value for the co-occurring terms “information” and “hypertext”? ")
+print(similarity_2)
+
+def cousine_similarity(word_index_1, word_index_2, matrix_cl):
+    similarity = np.dot(matrix_cl[word_index_1],matrix_cl[word_index_2]) /  (np.linalg.norm(matrix_cl[word_index_1]) * np.linalg.norm(matrix_cl[word_index_2]))
+    return similarity
+
+temp_matrix = np.zeros((25,25))
+for i in range(len(unique_words)):
+    for j in range(len(unique_words)):
+        temp_matrix[i,j] = cousine_similarity(i,j, matrix_cl)
+
+print(" Scalar Clusters: What are the 2 most frequent terms co-occurring with the search term “data”? ")
+temp_result = temp_matrix[data_index].argsort()
+print(unique_words[temp_result[-2]])
+print(unique_words[temp_result[-3]])
+
+
+print("Scalar Clusters: What are the 2 most frequent terms co-occurring with the search term “information”? ")
+temp_result = temp_matrix[information_index].argsort()
+print(unique_words[temp_result[-2]])
+print(unique_words[temp_result[-3]])
+
+print("--------------------------------------------------\n")
+
+print("--------------------isr6.11----------------------------\n")
+print("--------------------a)----------------------------\n")
+
